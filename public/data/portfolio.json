@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "title": "Aplikasi Manajemen Mata Kuliah",
+        "image": "images//perpustakaan-1.webp",
+        "link": "https:/mseptiawan.vercel.app"
+    },
+    {
+        "id": 2,
+        "title": "Aplikasi Perpustakaan berbasis Website",
+        "image": "images/perpustakaan-2.webp",
+        "link": "#"
+    },
+    {
+        "id": 3,
+        "title": "Blog dengan React dan Strapi CMS",
+        "image": "images/blog-1.webp",
+        "link": "#"
+    },
+    {
+        "id": 4,
+        "title": "Website Profil Perusahaan",
+        "image": "images/profil-perusahaan-1.webp",
+        "link": "#"
+    },
+    {
+        "id": 5,
+        "title": "Website Perhitungan Ikt Promotor Pada Pt. Changhong Electric Indonesia",
+        "image": "images/website-insentif.webp",
+        "link": "#"
+    }
+]
