@@ -63,10 +63,12 @@ Website ini cocok untuk siapa saja yang ingin menulis, membagikan pengalaman, da
 <img width="1747" height="915" alt="log" src="https://github.com/user-attachments/assets/07f7004a-3f89-4b44-8dcd-d30f6a630725" />
 
 **2. Dashboard Admin**  
+
 <img width="1890" height="939" alt="dashboard" src="https://github.com/user-attachments/assets/451fd486-2b11-44c8-ac92-7d38b862841e" />
 
 
 **3. Posting**  
+
 <img width="1871" height="945" alt="upload-post" src="https://github.com/user-attachments/assets/c90db43f-030f-4d58-a022-3b154158e5f3" />
 
 
