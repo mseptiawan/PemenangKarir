@@ -21,7 +21,11 @@ export default function Applications() {
         rejected: "bg-red-100 text-red-700",
         pending: "bg-yellow-100 text-yellow-700",
     };
-
+    const statusText = {
+        approved: "Disetujui",
+        rejected: "Ditolak",
+        pending: "Menunggu",
+    };
     return (
         <>
             <Head title="Pengajuan Penulis" />
@@ -32,7 +36,7 @@ export default function Applications() {
                     <div className="max-w-5xl mx-auto">
                         <Toaster position="top-right" />
                         <h1 className="text-3xl font-bold mb-8 text-gray-800">
-                            Daftar Pendaftaran Author
+                            Permohonan Author
                         </h1>
 
                         <div className="space-y-4">
@@ -51,7 +55,7 @@ export default function Applications() {
                                                 statusClasses[app.status]
                                             }`}
                                         >
-                                            {app.status}
+                                            {statusText[app.status]}
                                         </span>
                                     </div>
 
@@ -87,7 +91,7 @@ export default function Applications() {
                                         <Link
                                             href={route(
                                                 "author.applications.show",
-                                                app.id
+                                                app.slug
                                             )}
                                             className="inline-flex items-center px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
                                         >

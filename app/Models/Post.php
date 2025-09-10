@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @mixin IdeHelperPost
  */
 class Post extends Model
 {
-    protected $guarded = []; // gunakan guarded atau fillable sesuai kebutuhan
+    use SoftDeletes;
 
+    protected $guarded = []; // gunakan guarded atau fillable sesuai kebutuhan
     // Relasi ke User
     public function author()
     {
@@ -18,10 +20,11 @@ class Post extends Model
     }
 
     // Relasi ke Category
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id'); // default PK Category 'id'
+        return $this->belongsToMany(Category::class, 'category_post');
     }
+
 
     // Relasi ke banyak gambar
     public function images()
@@ -30,15 +33,15 @@ class Post extends Model
     }
 
     // Relasi ke komentar
- public function comments()
-{
-    // hanya top-level comments, children eager loaded
-    return $this->hasMany(Comment::class)
-                ->whereNull('parent_id')
-                ->with(['children.user'])
-                ->orderBy('created_at', 'desc');
-}
-     protected static function booted()
+    public function comments()
+    {
+        // hanya top-level comments, children eager loaded
+        return $this->hasMany(Comment::class)
+            ->whereNull('parent_id')
+            ->with(['children.user'])
+            ->orderBy('created_at', 'desc');
+    }
+    protected static function booted()
     {
         static::creating(function ($post) {
             if ($post->status === 'published' && !$post->published_at) {
@@ -47,7 +50,7 @@ class Post extends Model
         });
     }
     public function getRouteKeyName()
-{
-    return 'slug';
-}
+    {
+        return 'slug';
+    }
 }

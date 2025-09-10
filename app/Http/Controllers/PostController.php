@@ -18,8 +18,8 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Post::with(['author', 'category'])
-            ->where('status', 'published') // 👈 filter di sini
+        $query = Post::with(['author', 'categories'])
+            ->where('status', 'published') // filter published
             ->orderBy('created_at', 'desc');
 
         // Jika ada query search
@@ -32,20 +32,22 @@ class PostController extends Controller
             });
         }
 
-        $posts = $query->get();
+        // Pagination, misal 9 per halaman
+        $posts = $query->paginate(9)->withQueryString();
 
         return Inertia::render('Posts/Index', [
             'posts' => $posts,
             'search' => $search,
         ]);
     }
-    public function index2(Request $request)
+
+    public function indexForGuest(Request $request)
     {
-        $query = Post::with(['author', 'category'])
-            ->where('status', 'published') // 👈 filter di sini
+        $query = Post::with(['author', 'categories'])
+            ->where('status', 'published')
             ->orderBy('created_at', 'desc');
 
-        // Jika ada query search
+        // Filter search
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
@@ -55,11 +57,22 @@ class PostController extends Controller
             });
         }
 
-        $posts = $query->get();
+        // Filter kategori
+        if ($category = $request->input('category')) {
+            $query->whereHas('categories', function ($q) use ($category) {
+                $q->where('slug', $category);
+            });
+        }
 
-        return Inertia::render('Posts/Index2', [
+        // Batasi 6 post per halaman
+        $posts = $query->paginate(6)->withQueryString(); // paginate(6) + pertahankan query string
+        $isHomepage = !$request->has('category') && !$request->has('search');
+        return Inertia::render('Posts/IndexForGuest', [
             'posts' => $posts,
             'search' => $search,
+            'categories' => Category::all(),
+            'selectedCategory' => $category,
+            'isHomepage' => $isHomepage,
         ]);
     }
 
@@ -87,41 +100,84 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('create', Post::class); // cek via PostPolicy
+        $this->authorize('create', Post::class);
 
+        $messages = [
+            'title.required' => 'Judul wajib diisi.',
+            'title.string' => 'Judul harus berupa teks.',
+            'title.max' => 'Judul maksimal 200 karakter.',
+
+            'slug.required' => 'Isi slug',
+            'slug.string' => 'Judul harus berupa teks.',
+            'slug.unique' => 'Slug sudah dipakai, silakan ganti.',
+
+            'excerpt.required' => 'Excerpt wajib diisi.',
+            'excerpt.string' => 'Excerpt harus berupa teks.',
+            'excerpt.max' => 'Excerpt maksimal 500 karakter.',
+
+            'content.required' => 'Konten wajib diisi.',
+            'content.string' => 'Konten harus berupa teks.',
+
+            'thumbnail.image' => 'Thumbnail harus berupa file gambar.',
+            'thumbnail.max' => 'Ukuran thumbnail maksimal 2MB.',
+
+            'categories.required' => 'Kategori wajib dipilih minimal satu.',
+            'categories.array' => 'Kategori tidak valid.',
+            'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
+        ];
+
+        // $validated = $request->validate([
+        //     'title' => 'required|string|max:200',
+        //     'slug' => 'required|string|max:255|unique:posts,slug',
+        //     'excerpt' => 'required|string|max:500',
+        //     'content' => 'required|string',
+        //     'thumbnail' => 'required|image|max:2048',
+        //     'categories' => 'required|array|min:1',
+        //     'categories.*' => 'exists:categories,id',
+        //     'meta_title' => 'nullable|string|max:255',
+        //     'meta_description' => 'nullable|string|max:255',
+        //     'meta_keywords' => 'nullable|string|max:255',
+        // ], $messages);
         $validated = $request->validate([
             'title' => 'required|string|max:200',
-            'content' => 'required',
-            'thumbnail' => 'nullable|image|max:2048',
-            'category_id' => 'nullable|exists:categories,id',
-        ]);
+            'slug' => 'required|string|max:255|unique:posts,slug',
+            'excerpt' => 'required|string|max:500',
+            'content' => 'required|string',
+            'thumbnail' => 'required|image|max:2048',
+            'categories' => 'required|array|min:1',
+            'categories.*' => 'exists:categories,id',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:255',
+            'meta_keywords' => 'nullable|string|max:255',
+        ], $messages);
 
-        $slug = $request->slug ?? Str::slug($request->title);
-        $thumbnailPath = $request->file('thumbnail')?->store('uploads/thumbnails', 'public');
+        $slug = $validated['slug'] ?? Str::slug($validated['title']);
+        $thumbnailPath = $request->file('thumbnail') ? $request->file('thumbnail')->store('uploads/thumbnails', 'public') : null;
 
         $user = auth()->user();
         $status = $user->role === 'admin' ? 'published' : 'pending';
         $publishedAt = $user->role === 'admin' ? now() : null;
 
-        Post::create([
+        $post = Post::create([
             'user_id' => $user->id,
             'title' => $validated['title'],
             'slug' => $slug,
-            'excerpt' => $request->excerpt,
+            'excerpt' => $validated['excerpt'],
             'content' => $validated['content'],
             'thumbnail' => $thumbnailPath,
             'status' => $status,
             'published_at' => $publishedAt,
-            'category_id' => $request->category_id,
-            'meta_title' => $request->meta_title,
-            'meta_description' => $request->meta_description,
-            'meta_keywords' => $request->meta_keywords,
+            'meta_title' => $validated['meta_title'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'meta_keywords' => $validated['meta_keywords'] ?? null,
         ]);
+
+        $post->categories()->attach($validated['categories']);
 
         return redirect()->route('posts.index')
             ->with('success', $status === 'published'
                 ? 'Post berhasil dipublish.'
-                : 'Post dikirim, menunggu persetujuan admin.');
+                : 'Post berhasil dikirim dan menunggu persetujuan admin.');
     }
 
 
@@ -132,7 +188,7 @@ class PostController extends Controller
     {
         $this->authorize('view', $post); // cek via PostPolicy
 
-        $post->load(['author', 'category', 'comments.user']); // eager load relasi
+        $post->load(['author', 'categories', 'comments.user']); // eager load relasi
 
         return Inertia::render('Posts/Show', [
             'post' => $post,
@@ -144,7 +200,10 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $this->authorize('update', $post); // cek via PostPolicy
+        $this->authorize('update', $post);
+
+        // pastikan relasi categories di-load
+        $post->load('categories');
 
         $categories = Category::all();
 
@@ -153,44 +212,67 @@ class PostController extends Controller
             'categories' => $categories,
         ]);
     }
-
-
-    // Update post
     public function update(Request $request, Post $post)
     {
         $this->authorize('update', $post);
 
+        $messages = [
+            'title.required' => 'Judul wajib diisi.',
+            'title.string' => 'Judul harus berupa teks.',
+            'title.max' => 'Judul maksimal 200 karakter.',
+            'slug.unique' => 'Slug sudah dipakai, silakan ganti.',
+            'excerpt.string' => 'Excerpt harus berupa teks.',
+            'excerpt.max' => 'Excerpt maksimal 500 karakter.',
+            'content.required' => 'Konten wajib diisi.',
+            'content.string' => 'Konten harus berupa teks.',
+            'thumbnail.image' => 'Thumbnail harus berupa file gambar.',
+            'thumbnail.max' => 'Ukuran thumbnail maksimal 2MB.',
+            'categories.array' => 'Kategori tidak valid.',
+            'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
+        ];
+
         $validated = $request->validate([
             'title' => 'required|string|max:200',
-            'content' => 'required',
-            'thumbnail' => 'nullable|image|max:2048',
-            'images.*' => 'nullable|image|max:2048',
-        ]);
+            'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
+            'excerpt' => 'required|string|max:500',
+            'content' => 'required|string',
+            'thumbnail' => 'required|image|max:2048',
+            'categories' => 'required|array|min:1',
+            'categories.*' => 'exists:categories,id',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:255',
+            'meta_keywords' => 'nullable|string|max:255',
+        ], $messages);
 
-        $slug = $request->slug ?? Str::slug($request->title);
+        $slug = $validated['slug'] ?? Str::slug($validated['title']);
 
-        // Update thumbnail jika ada file baru
-        if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('uploads/thumbnails', 'public');
-            $post->thumbnail = $thumbnailPath;
-        }
-
-        // Update data post
-        $post->update([
+        $updateData = [
             'title' => $validated['title'],
             'slug' => $slug,
-            'excerpt' => $request->excerpt,
+            'excerpt' => $validated['excerpt'] ?? $post->excerpt,
             'content' => $validated['content'],
-            'status' => $request->status,
-            'category_id' => $request->category_id,
-            'meta_title' => $request->meta_title,
-            'meta_description' => $request->meta_description,
-            'meta_keywords' => $request->meta_keywords,
-        ]);
+            'meta_title' => $validated['meta_title'] ?? $post->meta_title,
+            'meta_description' => $validated['meta_description'] ?? $post->meta_description,
+            'meta_keywords' => $validated['meta_keywords'] ?? $post->meta_keywords,
+        ];
+
+        // Thumbnail jika ada file baru
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('uploads/thumbnails', 'public');
+            $updateData['thumbnail'] = $thumbnailPath;
+        }
+
+        $post->update($updateData);
+
+        // Sync kategori jika ada
+        if (!empty($validated['categories'])) {
+            $post->categories()->sync($validated['categories']);
+        }
 
         return redirect()->route('posts.manage')
             ->with('success', 'Post berhasil diupdate.');
     }
+
 
 
     /**
@@ -210,40 +292,51 @@ class PostController extends Controller
         return redirect()->back()->with('success', 'Post berhasil dihapus.');
     }
 
-
-
-    public function manage()
+    public function manage(Request $request)
     {
-        $user = auth()->user(); // <--- ini penting
+        $user = auth()->user();
 
+        $query = Post::with(['author', 'categories'])
+            ->orderBy('created_at', 'desc');
+
+        // Filter berdasarkan role
         if ($user->role === 'admin') {
             // Admin lihat semua post
-            $posts = Post::with(['author', 'category'])
-                ->orderBy('created_at', 'desc')
-                ->get();
+            $query->where('status', 'published');
         } else {
             // Author cuma lihat post miliknya sendiri
-            $posts = Post::with(['author', 'category'])
-                ->where('user_id', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            $query->where('user_id', $user->id)
+                ->where('status', 'published');
         }
 
-        // Kirim ke Inertia
-        return Inertia::render('Posts/Manage', [
+        // Filter search
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhereHas('author', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Pagination, misal 8 per halaman
+        $posts = $query->paginate(8)->withQueryString();
+
+        return Inertia::render('Posts/Manage/Index', [
             'posts' => $posts,
-            'auth' => [
-                'user' => $user,
-            ],
+            'search' => $search,
+            'auth' => ['user' => $user],
         ]);
     }
+
+
     public function pending()
     {
         $posts = Post::where('status', 'pending')
-            ->with(['author', 'category']) // load author + category
+            ->with(['author', 'categories']) // load author + category
             ->get();
 
-        return Inertia::render('Posts/Pending', [
+        return Inertia::render('Posts/Manage/Pending', [
             'posts' => $posts,
         ]);
     }

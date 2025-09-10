@@ -1,3 +1,25 @@
+/* resources/css/app.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Tambahan untuk styling Quill content */
+.prose h1 {
+    @apply text-3xl font-bold;
+}
+.prose h2 {
+    @apply text-2xl font-semibold;
+}
+.prose h3 {
+    @apply text-xl font-semibold;
+}
+.prose ol {
+    @apply list-decimal pl-6;
+}
+.prose ul {
+    @apply list-disc pl-6;
+}
+html {
+    scroll-behavior: smooth;
+}

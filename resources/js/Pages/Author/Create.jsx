@@ -20,7 +20,6 @@ export default function Create() {
     const [socialInputs, setSocialInputs] = useState({
         instagram: "",
         linkedin: "",
-        email: "",
     });
 
     const handleSocialChange = (platform, value) => {
@@ -44,12 +43,9 @@ export default function Create() {
                 }, 3000);
             },
             onError: () => {
-                toast.error(
-                    "Pendaftaran gagal. Periksa kembali form kamu.",
-                    {
-                        duration: 4000,
-                    }
-                );
+                toast.error("Pendaftaran gagal. Periksa kembali form kamu.", {
+                    duration: 4000,
+                });
             },
         });
     };
@@ -69,9 +65,15 @@ export default function Create() {
                     className="space-y-6 bg-white p-6 rounded-2xl shadow"
                     encType="multipart/form-data"
                 >
+                    <div className="mb-4 text-sm text-gray-500">
+                        <p>
+                            <span className="text-red-500">*</span> Menandakan wajib diisi.{" "}
+                        </p>
+                    </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Nama Panggilan
+                            Nama Panggilan{" "}
+                            <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -88,7 +90,7 @@ export default function Create() {
                     {/* Nama */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Nama Lengkap
+                            Nama Lengkap <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -108,7 +110,7 @@ export default function Create() {
                     {/* Email */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Email
+                            Email <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="email"
@@ -126,7 +128,7 @@ export default function Create() {
                     {/* Nomor HP */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Nomor HP
+                            Nomor HP <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -144,7 +146,7 @@ export default function Create() {
                     {/* Alamat */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Alamat
+                            Alamat <span className="text-red-500">*</span>
                         </label>
                         <textarea
                             rows="2"
@@ -162,7 +164,7 @@ export default function Create() {
                     {/* Bio */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Bio Singkat
+                            Bio Singkat <span className="text-red-500">*</span>
                         </label>
                         <textarea
                             rows="3"
@@ -180,7 +182,7 @@ export default function Create() {
                     {/* Avatar */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Foto Profil
+                            Foto Profil <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="file"
@@ -198,7 +200,7 @@ export default function Create() {
                     {/* CV */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Upload CV
+                            Upload CV <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="file"
@@ -215,26 +217,39 @@ export default function Create() {
                     {/* Social Links */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Link Media Sosial
+                            Link Media Sosial{" "}
+                            <span className="text-gray-400">(opsional)</span>
                         </label>
-                        {["instagram", "linkedin", "email"].map((platform) => (
-                            <input
-                                key={platform}
-                                type="text"
-                                placeholder={platform}
-                                value={socialInputs[platform]}
-                                onChange={(e) =>
-                                    handleSocialChange(platform, e.target.value)
-                                }
-                                className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mb-2"
-                            />
+                        {["instagram", "linkedin"].map((platform) => (
+                            <div key={platform} className="mb-3">
+                                <input
+                                    type="text"
+                                    placeholder={platform}
+                                    value={socialInputs[platform]}
+                                    onChange={(e) =>
+                                        handleSocialChange(
+                                            platform,
+                                            e.target.value
+                                        )
+                                    }
+                                    className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                />
+
+                                {/* Render error per platform */}
+                                {errors[`social_links.${platform}`] && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors[`social_links.${platform}`]}
+                                    </p>
+                                )}
+                            </div>
                         ))}
                     </div>
 
                     {/* Tema / Keahlian */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
-                            Tema / Keahlian
+                            Tema / Keahlian{" "}
+                            <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"

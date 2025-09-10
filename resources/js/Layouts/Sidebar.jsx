@@ -3,17 +3,25 @@ import {
     Home,
     FileText,
     LayoutDashboard,
+    CircleDashed,
     Users,
     ClipboardList,
+    Dock,
+    ArrowsUpFromLine,
     LogOut,
+    ArchiveRestore,
     Settings,
+    ChartNoAxesGantt,
     ChevronDown,
 } from "lucide-react";
 import { useState } from "react";
 
 export default function Sidebar() {
     const { auth } = usePage().props;
-    const [openProfile, setOpenProfile] = useState(false);
+    const isProfilePage =
+        route().current("profile.index") || route().current("password.edit");
+
+    const [openProfile, setOpenProfile] = useState(isProfilePage);
 
     const role = auth?.user?.role;
 
@@ -34,68 +42,66 @@ export default function Sidebar() {
             {/* Navigation */}
             <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 {/* Guest */}
-                {!auth?.user && (
-                    <>
-                        <Link
-                            href={route("posts.index")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
-                        >
-                            <Home size={20} />
-                            <span>Blog Home</span>
-                        </Link>
-                    </>
-                )}
-                {/* Reader */}
-                {role === "reader" && (
-                    <>
-                        <Link
-                            href={route("posts.index")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
-                        >
-                            <Home size={20} />
-                            <span>Blog Home</span>
-                        </Link>
-                        <Link
-                            href={route("author.create")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
-                        >
-                            <Users size={20} />
-                            <span>Daftar Author</span>
-                        </Link>
-                    </>
-                )}
 
                 {/* Author */}
                 {role === "author" && (
                     <>
                         <Link
                             href={route("dashboard")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("dashboard")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
                             <LayoutDashboard size={20} />
                             <span>Dashboard</span>
                         </Link>
+
                         <Link
                             href={route("posts.index")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("posts.index")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
                             <Home size={20} />
                             <span>Blog Home</span>
                         </Link>
                         <Link
-                            href={route("posts.manage")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            href={route("posts.create")}
+                            className={
+                                route().current("posts.create")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
-                            <FileText size={20} />
+                            <ArrowsUpFromLine size={20} />
+                            <span>Posting</span>
+                        </Link>
+                        <Link
+                            href={route("posts.manage")}
+                            className={
+                                route().current("posts.manage")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
+                        >
+                            <ChartNoAxesGantt size={20} />
                             <span>Kelola</span>
                         </Link>
 
                         <Link
-                            href={route("posts.create")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            href={route("restore.index")}
+                            className={
+                                route().current("restore.index")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
-                            <FileText size={20} />
-                            <span>Posting</span>
+                            <ArchiveRestore size={20} />
+                            <span>Restore Post</span>
                         </Link>
                     </>
                 )}
@@ -105,45 +111,83 @@ export default function Sidebar() {
                     <>
                         <Link
                             href={route("dashboard")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("dashboard")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
                             <LayoutDashboard size={20} />
                             <span>Dashboard</span>
                         </Link>
+
                         <Link
                             href={route("posts.index")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("posts.index")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
                             <Home size={20} />
                             <span>Blog Home</span>
                         </Link>
+
                         <Link
                             href={route("posts.create")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("posts.create")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
-                            <FileText size={20} />
+                            <ArrowsUpFromLine size={20} />
                             <span>Posting</span>
                         </Link>
+
                         <Link
                             href={route("posts.manage")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("posts.manage")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
-                            <FileText size={20} />
+                            <ChartNoAxesGantt size={20} />
                             <span>Kelola</span>
                         </Link>
                         <Link
-                            href={route("posts.pending")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            href={route("restore.index")}
+                            className={
+                                route().current("restore.index")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
-                            <ClipboardList size={20} />
+                            <ArchiveRestore size={20} />
+                            <span>Restore Post</span>
+                        </Link>
+                        <Link
+                            href={route("posts.pending")}
+                            className={
+                                route().current("posts.pending")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
+                        >
+                            <CircleDashed size={20} />
                             <span>Post Pending</span>
                         </Link>
 
                         <Link
                             href={route("author.index")}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                            className={
+                                route().current("author.index")
+                                    ? "flex items-center space-x-3 px-3 py-2 text-blue-600 font-semibold"
+                                    : "flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-blue-600 transition"
+                            }
                         >
-                            <ClipboardList size={20} />
+                            <Dock size={20} />
                             <span>Author Applications</span>
                         </Link>
                     </>
@@ -172,13 +216,22 @@ export default function Sidebar() {
                             <div className="ml-8 mt-1 flex flex-col space-y-1">
                                 <Link
                                     href={route("profile.index")}
-                                    className="px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                                    className={
+                                        route().current("profile.index")
+                                            ? "px-3 py-2 rounded-lg bg-blue-50 text-blue-600 font-semibold"
+                                            : "px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                                    }
                                 >
                                     Profile
                                 </Link>
+
                                 <Link
                                     href={route("password.edit")}
-                                    className="px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                                    className={
+                                        route().current("password.edit")
+                                            ? "px-3 py-2 rounded-lg bg-blue-50 text-blue-600 font-semibold"
+                                            : "px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition"
+                                    }
                                 >
                                     Ganti Kata Sandi
                                 </Link>

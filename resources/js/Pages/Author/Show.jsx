@@ -12,6 +12,11 @@ export default function Show() {
         pending: "bg-yellow-100 text-yellow-700",
     };
 
+const statusText = {
+    approved: "Disetujui",
+    rejected: "Ditolak",
+    pending: "Menunggu",
+};
     return (
         <>
             <Head title="Detail Calon Penulis" />
@@ -27,31 +32,56 @@ export default function Show() {
                         <div className="space-y-6">
                             {/* Nama */}
                             <div>
-                                <p className="font-semibold text-gray-700">Nama Lengkap</p>
-                                <p className="text-gray-600">{application.full_name}</p>
+                                <p className="font-semibold text-gray-700">
+                                    Nama Lengkap
+                                </p>
+                                <p className="text-gray-600">
+                                    {application.full_name}
+                                </p>
                             </div>
-
+                            <div>
+                                <p className="font-semibold text-gray-700">
+                                    Email
+                                </p>
+                                <p className="text-gray-600">
+                                    {application.email}
+                                </p>
+                            </div>
                             {/* Nomor HP */}
                             <div>
-                                <p className="font-semibold text-gray-700">Nomor HP</p>
-                                <p className="text-gray-600">{application.phone || "-"}</p>
+                                <p className="font-semibold text-gray-700">
+                                    Nomor HP
+                                </p>
+                                <p className="text-gray-600">
+                                    {application.phone || "-"}
+                                </p>
                             </div>
 
                             {/* Alamat */}
                             <div>
-                                <p className="font-semibold text-gray-700">Alamat</p>
-                                <p className="text-gray-600">{application.address || "-"}</p>
+                                <p className="font-semibold text-gray-700">
+                                    Alamat
+                                </p>
+                                <p className="text-gray-600">
+                                    {application.address || "-"}
+                                </p>
                             </div>
 
                             {/* Bio */}
                             <div>
-                                <p className="font-semibold text-gray-700">Bio Singkat</p>
-                                <p className="text-gray-600">{application.bio || "-"}</p>
+                                <p className="font-semibold text-gray-700">
+                                    Bio Singkat
+                                </p>
+                                <p className="text-gray-600">
+                                    {application.bio || "-"}
+                                </p>
                             </div>
 
                             {/* Foto Profil */}
                             <div>
-                                <p className="font-semibold text-gray-700">Foto Profil</p>
+                                <p className="font-semibold text-gray-700">
+                                    Foto Profil
+                                </p>
                                 {application.profile_photo ? (
                                     <img
                                         src={`/storage/${application.profile_photo}`}
@@ -65,7 +95,9 @@ export default function Show() {
 
                             {/* CV */}
                             <div>
-                                <p className="font-semibold text-gray-700">CV</p>
+                                <p className="font-semibold text-gray-700">
+                                    CV
+                                </p>
                                 {application.cv ? (
                                     <a
                                         href={`/storage/${application.cv}`}
@@ -81,24 +113,28 @@ export default function Show() {
 
                             {/* Social Links */}
                             <div>
-                                <p className="font-semibold text-gray-700">Social Links</p>
+                                <p className="font-semibold text-gray-700">
+                                    Social Links
+                                </p>
                                 {application.social_links &&
                                 Object.keys(application.social_links).length ? (
                                     <ul className="list-disc list-inside text-gray-600 mt-2 space-y-1">
-                                        {Object.entries(application.social_links).map(
-                                            ([key, value]) => (
-                                                <li key={key}>
-                                                    <span className="capitalize">{key}:</span>{" "}
-                                                    <a
-                                                        href={value}
-                                                        target="_blank"
-                                                        className="text-indigo-600 hover:underline"
-                                                    >
-                                                        {value}
-                                                    </a>
-                                                </li>
-                                            )
-                                        )}
+                                        {Object.entries(
+                                            application.social_links
+                                        ).map(([key, value]) => (
+                                            <li key={key}>
+                                                <span className="capitalize">
+                                                    {key}:
+                                                </span>{" "}
+                                                <a
+                                                    href={value}
+                                                    target="_blank"
+                                                    className="text-indigo-600 hover:underline"
+                                                >
+                                                    {value}
+                                                </a>
+                                            </li>
+                                        ))}
                                     </ul>
                                 ) : (
                                     <p className="text-gray-600">-</p>
@@ -107,17 +143,25 @@ export default function Show() {
 
                             {/* Keahlian */}
                             <div>
-                                <p className="font-semibold text-gray-700">Keahlian / Tema</p>
-                                <p className="text-gray-600">{application.topic || "-"}</p>
+                                <p className="font-semibold text-gray-700">
+                                    Keahlian / Tema
+                                </p>
+                                <p className="text-gray-600">
+                                    {application.topic || "-"}
+                                </p>
                             </div>
 
                             {/* Status */}
                             <div>
-                                <p className="font-semibold text-gray-700">Status</p>
+                                <p className="font-semibold text-gray-700">
+                                    Status
+                                </p>
                                 <span
-                                    className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded ${statusClasses[application.status]}`}
+                                    className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded ${
+                                        statusClasses[application.status]
+                                    }`}
                                 >
-                                    {application.status}
+                                    {statusText[application.status]}
                                 </span>
                             </div>
                         </div>

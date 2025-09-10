@@ -1,25 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head, Link, router } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useState } from "react";
 import Sidebar from "@/Layouts/Sidebar";
 
-export default function Index({ posts, auth, search: initialSearch }) {
+export default function Index({ posts, search: initialSearch }) {
     const [search, setSearch] = useState(initialSearch || "");
 
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get("/posts", { search });
+        router.get("/posts", { search }, { preserveState: true });
     };
+
     return (
         <>
             <Head title="Blog Home" />
 
             <div className="flex min-h-screen bg-gray-100">
-                {/* Sidebar */}
                 <Sidebar />
 
-                {/* Main Content */}
                 <main className="flex-1 p-6 ml-64">
                     {/* Search */}
                     <form onSubmit={handleSearch} className="mb-6 flex">
@@ -38,29 +35,9 @@ export default function Index({ posts, auth, search: initialSearch }) {
                         </button>
                     </form>
 
-                    {/* Promo Banner */}
-                    <div className="mb-6 p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl shadow flex items-center justify-between">
-                        <div>
-                            <h2 className="text-xl font-bold">
-                                🎁 Promo Affiliate!
-                            </h2>
-                            <p className="mt-1 text-sm">
-                                Dapatkan diskon 20% untuk produk pilihan melalui
-                                link kami.
-                            </p>
-                        </div>
-                        <a
-                            href="https://affiliate-link.com"
-                            target="_blank"
-                            className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition"
-                        >
-                            Klaim Sekarang
-                        </a>
-                    </div>
-
                     {/* Posts Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {posts.map((post) => (
+                        {posts.data.map((post) => (
                             <div
                                 key={post.id}
                                 className="bg-white rounded-xl shadow p-4 hover:shadow-md transition"
@@ -91,6 +68,30 @@ export default function Index({ posts, auth, search: initialSearch }) {
                                     Lihat Detail
                                 </Link>
                             </div>
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="flex justify-center mt-6 space-x-2">
+                        {posts.links.map((link, index) => (
+                            <button
+                                key={index}
+                                disabled={!link.url}
+                                className={`px-3 py-1 rounded border ${
+                                    link.active
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-white text-blue-500 hover:bg-blue-100"
+                                }`}
+                                onClick={() =>
+                                    link.url &&
+                                    router.get(
+                                        link.url,
+                                        {},
+                                        { preserveState: true, replace: true }
+                                    )
+                                }
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
                         ))}
                     </div>
                 </main>

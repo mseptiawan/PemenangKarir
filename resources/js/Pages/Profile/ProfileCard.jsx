@@ -18,7 +18,6 @@ export default function ProfileCard() {
     const [socialInputs, setSocialInputs] = useState({
         instagram: user.social_links?.instagram || "",
         linkedin: user.social_links?.linkedin || "",
-        email: user.social_links?.email || "",
     });
 
     // Sinkronisasi social links ke Inertia form
@@ -41,7 +40,6 @@ export default function ProfileCard() {
         social_links: user.social_links || {
             instagram: "",
             linkedin: "",
-            email: "",
         },
     });
 
@@ -320,24 +318,6 @@ export default function ProfileCard() {
                                 />
 
                                 {/* Email */}
-                                <input
-                                    type="text"
-                                    placeholder="Email"
-                                    value={socialInputs.email}
-                                    onChange={(e) =>
-                                        handleSocialChange(
-                                            "email",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mb-2"
-                                />
-
-                                {errors.social_links && (
-                                    <div className="text-red-600 text-sm">
-                                        {errors.social_links}
-                                    </div>
-                                )}
                             </div>
 
                             <div className="flex items-center gap-3">

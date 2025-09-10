@@ -47,20 +47,53 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = $request->user();
+ $messages = [
+        'name.required' => 'Nama panggilan wajib diisi.',
+        'name.string' => 'Nama panggilan harus berupa teks.',
+        'name.max' => 'Nama panggilan tidak boleh lebih dari 255 karakter.',
+
+        'full_name.required' => 'Nama lengkap wajib diisi.',
+        'full_name.string' => 'Nama lengkap harus berupa teks.',
+        'full_name.max' => 'Nama lengkap tidak boleh lebih dari 255 karakter.',
+
+        'phone.required' => 'Nomor telepon wajib diisi.',
+        'phone.string' => 'Nomor telepon harus berupa teks.',
+        'phone.max' => 'Nomor telepon tidak boleh lebih dari 20 karakter.',
+
+        'address.required' => 'Alamat wajib diisi.',
+        'address.string' => 'Alamat harus berupa teks.',
+        'address.max' => 'Alamat tidak boleh lebih dari 500 karakter.',
+
+        'bio.required' => 'Bio wajib diisi.',
+        'bio.string' => 'Bio harus berupa teks.',
+
+        'topic.required' => 'Bidang keahlian wajib diisi.',
+        'topic.string' => 'Bidang keahlian harus berupa teks.',
+        'topic.max' => 'Bidang keahlian tidak boleh lebih dari 255 karakter.',
+
+        'profile_photo.image' => 'Foto profil harus berupa gambar.',
+        'profile_photo.max' => 'Ukuran foto profil maksimal 2MB.',
+
+        'cv.mimes' => 'CV harus berupa file PDF, DOC, atau DOCX.',
+        'cv.max' => 'Ukuran CV maksimal 5MB.',
+
+        'social_links.array' => 'Tautan sosial media harus berupa array.',
+        'social_links.*.string' => 'Setiap tautan sosial media harus berupa teks.',
+    ];
 
         // Validasi input
         $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'full_name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-            'bio' => 'nullable|string',
-            'topic' => 'nullable|string|max:255',
-            'profile_photo' => 'nullable|image|max:2048',        // max 2MB
-            'cv' => 'nullable|mimes:pdf,doc,docx|max:5120',      // max 5MB
-            'social_links' => 'nullable|array',
-            'social_links.*' => 'nullable|string',
-        ]);
+        'name' => 'required|string|max:255',
+        'full_name' => 'required|string|max:255',
+        'phone' => 'required|string|max:20',
+        'address' => 'required|string|max:500',
+        'bio' => 'required|string',
+        'topic' => 'required|string|max:255',
+        'profile_photo' => 'nullable|image|max:2048',
+        'cv' => 'nullable|mimes:pdf,doc,docx|max:5120',
+        'social_links' => 'nullable|array',
+        'social_links.*' => 'nullable|string',
+    ], $messages);
 
         $updateData = [
             'name' => $validated['name'] ?? $user->name,

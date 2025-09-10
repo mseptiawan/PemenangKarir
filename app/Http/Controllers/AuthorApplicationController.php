@@ -70,6 +70,10 @@ class AuthorApplicationController extends Controller
             'social_links.array' => 'Tautan sosial media harus berupa array.',
             'social_links.*.url' => 'Setiap tautan sosial media harus berupa URL yang valid.',
 
+            'social_links.instagram.url' => 'Link Instagram harus berupa URL valid (contoh: https://instagram.com/username).',
+            'social_links.linkedin.url' => 'Link LinkedIn harus berupa URL valid (contoh: https://linkedin.com/in/username).',
+
+
             'topic.required' => 'Bidang keahlian wajib diisi.',
             'topic.string' => 'Bidang keahlian harus berupa teks.',
             'topic.max' => 'Bidang keahlian tidak boleh lebih dari 255 karakter.',
@@ -87,7 +91,7 @@ class AuthorApplicationController extends Controller
             'bio' => 'required|string',
             'profile_photo' => 'required|image|max:2048',
             'cv' => 'required|mimes:pdf,doc,docx|max:5120',
-            'social_links' => 'required|array',
+            'social_links' => 'nullable|array',
             'social_links.*' => 'nullable|url',
             'topic' => 'required|string|max:20',
             'email' => 'required|email',
@@ -128,17 +132,56 @@ class AuthorApplicationController extends Controller
     {
         $this->authorize('update', $application); // author & reader only
 
+        $messages = [
+            'name.required' => 'Nama panggilan wajib diisi.',
+            'name.string' => 'Nama panggilan harus berupa teks.',
+            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+
+            'full_name.required' => 'Nama lengkap wajib diisi.',
+            'full_name.string' => 'Nama lengkap harus berupa teks.',
+            'full_name.max' => 'Nama lengkap tidak boleh lebih dari 255 karakter.',
+
+            'phone.required' => 'Nomor telepon wajib diisi.',
+            'phone.string' => 'Nomor telepon harus berupa teks.',
+            'phone.max' => 'Nomor telepon tidak boleh lebih dari 20 karakter.',
+
+            'address.required' => 'Alamat wajib diisi.',
+            'address.string' => 'Alamat harus berupa teks.',
+            'address.max' => 'Alamat tidak boleh lebih dari 500 karakter.',
+
+            'bio.required' => 'Bio wajib diisi.',
+            'bio.string' => 'Bio harus berupa teks.',
+
+            'profile_photo.image' => 'Foto profil harus berupa gambar.',
+            'profile_photo.max' => 'Ukuran foto profil maksimal 2MB.',
+
+            'cv.mimes' => 'CV harus berupa file PDF, DOC, atau DOCX.',
+            'cv.max' => 'Ukuran CV maksimal 5MB.',
+
+            'social_links.array' => 'Tautan sosial media harus berupa array.',
+            'social_links.*.url' => 'Setiap tautan sosial media harus berupa URL yang valid.',
+
+            'topic.required' => 'Bidang keahlian wajib diisi.',
+            'topic.string' => 'Bidang keahlian harus berupa teks.',
+            'topic.max' => 'Bidang keahlian tidak boleh lebih dari 255 karakter.',
+
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+        ];
+
         $validated = $request->validate([
-            'full_name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-            'bio' => 'nullable|string',
+            'name' => 'required|string|max:30',
+            'full_name' => 'required|string|max:30',
+            'phone' => 'required|string|max:13',
+            'address' => 'required|string|max:100',
+            'bio' => 'required|string',
             'profile_photo' => 'nullable|image|max:2048',
             'cv' => 'nullable|mimes:pdf,doc,docx|max:5120',
             'social_links' => 'nullable|array',
-            'social_links.*' => 'nullable|string',
-            'topic' => 'nullable|string|max:255',
-        ]);
+            'social_links.*' => 'nullable|url',
+            'topic' => 'required|string|max:20',
+            'email' => 'required|email',
+        ], $messages);
 
         if ($request->hasFile('profile_photo')) {
             $validated['profile_photo'] = $request->file('profile_photo')
@@ -154,7 +197,7 @@ class AuthorApplicationController extends Controller
 
         $application->update($validated);
 
-        return redirect()->back()->with('success', 'Application updated!');
+        return redirect()->back()->with('success', 'Pendaftaran author berhasil diperbarui!');
     }
 
     /**

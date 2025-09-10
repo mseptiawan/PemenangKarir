@@ -18,6 +18,14 @@ class LoginRequest extends FormRequest
     {
         return true;
     }
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Password harus diisi.',
+        ];
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -80,6 +88,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

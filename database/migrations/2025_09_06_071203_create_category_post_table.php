@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id(); // INT AUTO_INCREMENT PRIMARY KEY
-            $table->string('name', 100)->unique();
-            $table->string('slug', 150)->unique();
+        Schema::create('category_post', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
+
+            $table->unique(['category_id', 'post_id']); // biar gak dobel
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('category_post');
     }
 };

@@ -3,12 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @mixin IdeHelperCategory
  */
 class Category extends Model
 {
-     protected $guarded = [];
+    use SoftDeletes;
+    protected $fillable = ['name', 'slug'];
+
+  public function posts()
+{
+    return $this->belongsToMany(Post::class, 'category_post');
+}
 
 }

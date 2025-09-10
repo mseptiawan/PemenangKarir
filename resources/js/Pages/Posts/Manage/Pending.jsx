@@ -29,11 +29,11 @@ export default function Pending({ posts }) {
                 {/* Main Content */}
                 <main className="flex-1 p-6 ml-64">
                     <h1 className="text-2xl font-bold mb-6">
-                        Post Pending Approval
+                        Permohonan postingan
                     </h1>
 
                     {posts.length === 0 ? (
-                        <p className="text-gray-600">Tidak ada post pending.</p>
+                        <p className="text-gray-600">Belum ada permohonan postingan.</p>
                     ) : (
                         <div className="space-y-6">
                             {posts.map((p) => (
@@ -62,8 +62,10 @@ export default function Pending({ posts }) {
                                             </p>
                                             <p className="text-sm text-gray-500">
                                                 Kategori:{" "}
-                                                {p.category
-                                                    ? p.category.name
+                                                {p.categories.length > 0
+                                                    ? p.categories
+                                                          .map((c) => c.name)
+                                                          .join(", ")
                                                     : "Tanpa Kategori"}
                                             </p>
                                         </div>
@@ -77,35 +79,45 @@ export default function Pending({ posts }) {
                                         >
                                             Approve
                                         </button>
+                                        <a
+                                            href={route("posts.show", p.slug)} // pastikan route ini ada
+                                            target="_blank"
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                                        >
+                                            Lihat
+                                        </a>
                                     </div>
 
                                     {/* Reject Section */}
-                                    <div className="mt-4">
-                                        <textarea
-                                            value={reasons[p.slug] || ""}
-                                            onChange={(e) =>
-                                                setReasons((prev) => ({
-                                                    ...prev,
-                                                    [p.slug]: e.target.value,
-                                                }))
-                                            }
-                                            placeholder="Alasan tolak"
-                                            className="border rounded-lg px-3 py-2 w-full resize-none focus:ring focus:ring-red-200"
-                                            rows={3}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => reject(p.slug)}
-                                            className="px-4 py-2 bg-red-600 text-white rounded-lg mt-2 hover:bg-red-700 transition"
-                                        >
-                                            Reject
-                                        </button>
-                                        {form.errors.reason && (
-                                            <p className="text-sm text-red-500 mt-1">
-                                                {form.errors.reason}
-                                            </p>
-                                        )}
-                                    </div>
+                                <div className="mt-4">
+    <textarea
+        value={reasons[p.slug] || ""}
+        onChange={(e) =>
+            setReasons((prev) => ({
+                ...prev,
+                [p.slug]: e.target.value,
+            }))
+        }
+        placeholder="Alasan tolak..."
+        className="border rounded-lg px-3 py-2 w-full resize-none focus:ring focus:ring-red-200"
+        rows={2}
+    />
+    <div className="flex justify-between items-center mt-2">
+        {form.errors.reason && (
+            <p className="text-sm text-red-500">
+                {form.errors.reason}
+            </p>
+        )}
+        <button
+            type="button"
+            onClick={() => reject(p.slug)}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+        >
+            ❌ Reject
+        </button>
+    </div>
+</div>
+
                                 </div>
                             ))}
                         </div>

@@ -24,6 +24,8 @@ const NavigationLayout = () => {
                                 className="  text-black mt-14  h-20"
                             />
                         </Link>
+                            <h2 className="font-bold font-poppins text-2xl mt-12 ">Pemenang Karir</h2>
+
                     </div>
 
                     {/* Desktop Menu */}
@@ -40,7 +42,6 @@ const NavigationLayout = () => {
                                 >
                                     Beranda
                                 </Link>
-
                                 <Link
                                     href={route("portfolio")}
                                     className={
@@ -52,16 +53,15 @@ const NavigationLayout = () => {
                                     Portofolio Web
                                 </Link>
                                 <Link
-                                    href={route("posts.index2")}
+                                    href={route("posts.indexForGuest")}
                                     className={
-                                        route().current("posts.index2")
+                                        route().current("posts.indexForGuest")
                                             ? "block px-3 py-2 text-base font-medium text-black border-b-2 border-blue-500"
                                             : "block px-3 py-2  text-base font-medium text-black hover:border-b-2 hover:border-blue-400 transition"
                                     }
                                 >
                                     Blog Home
                                 </Link>
-
                                 <Link
                                     href={route("contact")}
                                     className={
@@ -71,6 +71,14 @@ const NavigationLayout = () => {
                                     }
                                 >
                                     Kontak Kami
+                                </Link>{" "}
+                                <Link
+                                    href={route("login")}
+                                    active={route().current("login")}
+                                    className="block shadow-lg bg-blue-600 text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium "
+                                    activeClassName="bg-black text-white"
+                                >
+                                    Masuk
                                 </Link>
                             </div>
                         </div>
