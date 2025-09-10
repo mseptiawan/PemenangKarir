@@ -82,11 +82,11 @@ export default function IndexForGuest({
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Cari judul atau author..."
-                            className="w-full border rounded-full  px-3 py-2 flex-1 border-gray-300 "
+                            className="w-full border rounded-full text-xs  px-3 py-2 flex-1 border-gray-300 "
                         />
                         <button
                             type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-full"
                         >
                             Cari
                         </button>
@@ -106,7 +106,7 @@ export default function IndexForGuest({
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Email Anda"
-                            className="border rounded-full px-4 py-2 border-gray-300 w-full"
+                            className="border rounded-full px-4 py-2 text-xs border-gray-300 w-full"
                             required
                         />
 
@@ -121,9 +121,6 @@ export default function IndexForGuest({
 
                     {/* Daftar Isi */}
                     <div>
-                        <h3 className="font-semibold text-gray-700 mb-2">
-                            Kategori
-                        </h3>
                         <div>
                             <h3 className="font-semibold text-gray-700 mb-2">
                                 Kategori
@@ -163,7 +160,7 @@ export default function IndexForGuest({
                 {/* Konten utama kanan 80% */}
                 <main className="w-4/5 flex flex-col gap-6">
                     {/* Promo Banner */}
-                    {!selectedCategory && !isHomepage && (
+                    {!selectedCategory  && (
                         <div className="flex flex-col md:flex-row gap-6 mb-6">
                             {/* Card Kiri: Promo Affiliate */}
                             <div className="h-72 flex-1 p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
@@ -359,17 +356,17 @@ export default function IndexForGuest({
                     </main>
                 </main>
             </div>
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl p-6 mt-10 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 mx-10 mb-20 h-64">
+            <div className="bg-gradient-to-r from-blue-400 to-indigo-600 text-white rounded-xl p-6 mt-10 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 mx-10 mb-20 h-64">
                 {/* Teks promo / info */}
                 <div className="flex-1">
                     <h2 className="text-xl md:text-2xl font-bold mb-2">
-                        Jelajahi berbagai tips dan solusi praktis dari Mekari
-                        Sign
+                        “Temukan berbagai tips dan solusi praktis dari Pemenang
+                        Karir.
                     </h2>
                     <p className="text-sm md:text-base opacity-90">
-                        Subscribe untuk mendapatkan informasi digitalisasi
-                        bisnis, keamanan, dan rangkuman konten pilihan untuk
-                        kebutuhan Anda.
+                        Subscribe untuk mendapatkan informasi seputar
+                        digitalisasi, keamanan, dan rangkuman konten pilihan
+                        yang mendukung kebutuhan karir dan bisnis Anda.”
                     </p>
                 </div>
 
@@ -384,7 +381,7 @@ export default function IndexForGuest({
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Anda"
                         required
-                        className="px-4 py-2 rounded-full text-gray-800 flex-1"
+                        className="px-4 py-2 rounded-full text-gray-800 flex-1 text-xs"
                     />
                     <button
                         type="submit"

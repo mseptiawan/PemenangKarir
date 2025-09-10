@@ -236,7 +236,7 @@ class PostController extends Controller
             'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
-            'thumbnail' => 'required|image|max:2048',
+            'thumbnail' => 'nullable|image|max:2048',
             'categories' => 'required|array|min:1',
             'categories.*' => 'exists:categories,id',
             'meta_title' => 'nullable|string|max:255',

@@ -25,7 +25,7 @@ export default function Index({ posts, search: initialSearch }) {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Cari judul atau author..."
-                            className="flex-1 border rounded-l-lg px-3 py-2"
+                            className="flex-1  border rounded-l-lg px-3 py-2 "
                         />
                         <button
                             type="submit"
@@ -49,7 +49,7 @@ export default function Index({ posts, search: initialSearch }) {
                                             : "/images/no-img.png"
                                     }
                                     alt={post.title}
-                                    className="rounded mb-2 w-full h-36 object-cover"
+                                    className="rounded mb-2 w-full h-40 object-cover"
                                 />
                                 <h2 className="font-semibold text-lg mb-1">
                                     {post.title}

@@ -75,7 +75,7 @@ const NavigationLayout = () => {
                                 <Link
                                     href={route("login")}
                                     active={route().current("login")}
-                                    className="block shadow-lg bg-blue-600 text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium "
+                                    className="block shadow-lg bg-blue-600 text-white hover:bg-blue-500 px-3 py-2 rounded-full text-base font-medium "
                                     activeClassName="bg-black text-white"
                                 >
                                     Masuk

@@ -57,7 +57,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                 >
                     <header className="mb-6">
                         <h2 className="text-2xl font-bold text-gray-800">
-                            🔑 Update Password
+                            Update Password
                         </h2>
                         <p className="mt-1 text-sm text-gray-500">
                             Pastikan kata sandi baru panjang & random biar akun
@@ -155,7 +155,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                                 disabled={processing}
                                 className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg text-white font-semibold shadow"
                             >
-                                {processing ? "⏳ Menyimpan..." : "💾 Simpan"}
+                                {processing ? "Menyimpan..." : "Simpan"}
                             </PrimaryButton>
 
                             <Transition
