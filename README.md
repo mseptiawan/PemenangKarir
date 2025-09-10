@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="#" target="_blank"><img src="https://via.placeholder.com/400x100?text=Pemenang+Karir+Logo" width="400" alt="Pemenang Karir Logo"></a>
+    <img width="443" height="355" alt="logo" src="https://github.com/user-attachments/assets/10cafeb7-1581-40f2-b607-4023033cb112" />
 </p>
 
 <p align="center">
